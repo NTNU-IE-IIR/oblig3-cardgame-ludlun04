@@ -4,6 +4,7 @@ import javafx.stage.Stage;
 
 public class Main {
   public static void main(String[] args) {
-    MainWindow.appMain(args);
+    //MainWindow.appMain(args);
+    DeckOfCards deck = new DeckOfCards();
   }
 }
