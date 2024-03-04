@@ -39,8 +39,6 @@ public class DeckOfCards {
     ArrayList<PlayingCard> cardsToBeDealt= new ArrayList<>();
     ArrayList<PlayingCard> cardsCopy = new ArrayList<>(Arrays.asList(this.cards));
 
-    System.out.println(cardsCopy.size());
-
     for (int i = 0; i < amountOfCards; i++) {
       int randIndex = (int) (Math.random() * (cardsCopy.size()));
       PlayingCard randomCard = cardsCopy.get(randIndex);
