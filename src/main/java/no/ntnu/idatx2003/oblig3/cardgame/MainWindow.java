@@ -28,8 +28,11 @@ public class MainWindow extends Application{
   private DeckOfCards deck;
   private BorderPane rootNode;
 
+  private HandOfCards hand;
+
   public MainWindow() {
     this.deck = new DeckOfCards();
+    this.hand = new HandOfCards(5);
   }
 
   /**
@@ -61,18 +64,40 @@ public class MainWindow extends Application{
   private GridPane getBottomPane() {
     GridPane bottomPane = new GridPane();
 
+    Label sumOfFacesDescriptor = new Label("Sum of the faces: ");
+    bottomPane.add(sumOfFacesDescriptor, 0, 0);
+
+    int sumOfFaces = this.hand.getSumOfFaces();
+
+    Label sumofFacesLabel = new Label(String.valueOf(sumOfFaces));
+    bottomPane.add(sumofFacesLabel, 1, 0);
 
 
+
+    Label flushDescriptor = new Label("Flush: ");
+    bottomPane.add(flushDescriptor,0, 1);
+
+    String flushStatus = "";
+
+    if (this.hand.isFlush()) {
+      flushStatus = "Yes";
+    } else {
+      flushStatus = "No";
+    }
+
+    Label flushLabel = new Label(flushStatus);
+    bottomPane.add(flushLabel, 1, 1);
+
+    bottomPane.setStyle("-fx-background-color: white");
     return bottomPane;
   }
 
-  private FlowPane getCenterPane(Collection<PlayingCard> cards) {
+  private FlowPane getCenterPane() {
 
     FlowPane centerPane = new FlowPane();
-    for (PlayingCard card : cards) {
-      String filename = card.getFace() + "" + card.getSuit() + ".png";
-      String filePath = "cards_images/" + filename;
-      Image image = new Image(filePath);
+    for (PlayingCard card : this.hand.getHand()) {
+
+      Image image = new Image(PlayingCardPathFinder.getPlayingCardPath(card));
       ImageView imageView = new ImageView(image);
       imageView.setFitHeight(200);
       imageView.setPreserveRatio(true);
@@ -80,7 +105,8 @@ public class MainWindow extends Application{
     }
 
     centerPane.setAlignment(Pos.CENTER);
-    centerPane.setPadding(new Insets(5));
+    centerPane.setHgap(10);
+    centerPane.setVgap(10);
     return centerPane;
   }
 
@@ -90,13 +116,14 @@ public class MainWindow extends Application{
     FlowPane centerPane = new FlowPane();
 
     for (int i = 0; i < 5; i++) {
-      ImageView imageView = new ImageView(new Image("cards_images/joker.png"));
+      ImageView imageView = new ImageView(new Image(PlayingCardPathFinder.getJokerPath()));
       imageView.setFitHeight(200);
       imageView.setPreserveRatio(true);
       centerPane.getChildren().add(imageView);
     }
     centerPane.setAlignment(Pos.CENTER);
-    centerPane.setPadding(new Insets(5));
+    centerPane.setHgap(10);
+    centerPane.setVgap(10);
 
     return centerPane;
   }
@@ -104,10 +131,15 @@ public class MainWindow extends Application{
   private VBox getRightPane() {
     Button dealHandButton = new Button("Deal Hand");
     dealHandButton.setOnAction((ActionEvent event) -> {
-      Collection<PlayingCard> hand = this.deck.dealHand(5);
-      this.rootNode.setCenter(getCenterPane(hand));
+    this.hand.setHand(this.deck.dealHand(5));
+    this.rootNode.setCenter(getCenterPane());
     });
+
     Button checkHandButton = new Button("Check Hand");
+    checkHandButton.setOnAction((ActionEvent event) -> {
+      this.rootNode.setBottom(getBottomPane());
+    });
+
 
     VBox rightPane = new VBox();
     rightPane.getChildren().addAll(dealHandButton, checkHandButton);
