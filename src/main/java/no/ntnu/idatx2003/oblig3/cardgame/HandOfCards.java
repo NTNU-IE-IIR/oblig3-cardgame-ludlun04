@@ -49,4 +49,25 @@ public class HandOfCards {
     return isFlush;
   }
 
+  public Collection<PlayingCard> getHearts() {
+    Collection<PlayingCard> hearts = new ArrayList<>();
+
+    for (PlayingCard card : this.hand) {
+      if (card.getSuit() == 'H') {
+        hearts.add(card);
+      }
+    }
+    return hearts;
+  }
+
+  public boolean hasQueenOfSpades() {
+    boolean hasQueenOfSpades = false;
+    for (PlayingCard card : this.hand) {
+      if (card.getSuit() == 'S' && card.getFace() == 12) {
+        hasQueenOfSpades = true;
+      }
+    }
+    return hasQueenOfSpades;
+  }
+
 }
