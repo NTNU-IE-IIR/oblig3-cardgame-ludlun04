@@ -26,13 +26,11 @@ public class HandOfCards {
   }
 
   public int getSumOfFaces() {
-    int sum = 0;
 
-    for (PlayingCard card : this.hand) {
-      sum += card.getFace();
-    }
-
-    return sum;
+    return this.hand
+        .stream()
+        .mapToInt(PlayingCard::getFace)
+        .sum();
   }
 
   public boolean isFlush()  {
