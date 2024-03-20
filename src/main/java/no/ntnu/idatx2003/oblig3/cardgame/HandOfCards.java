@@ -2,6 +2,8 @@ package no.ntnu.idatx2003.oblig3.cardgame;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class HandOfCards {
 
@@ -34,38 +36,29 @@ public class HandOfCards {
   }
 
   public boolean isFlush()  {
-    if (hand.isEmpty()) {
-      return false;
-    }
-    boolean isFlush = true;
-    char suit = this.hand.iterator().next().getSuit(); //suit of first card
-    for (PlayingCard card : this.hand) {
-      if (card.getSuit() != suit) {
-        isFlush = false;
-      }
-    }
-    return isFlush;
+
+    return this.hand
+        .stream()
+        .map((PlayingCard::getSuit))
+        .distinct().limit(2).count() == 1;
+    // count of distinct suits is one, gives up after another suit shows up (limit of 2)
   }
 
   public Collection<PlayingCard> getHearts() {
-    Collection<PlayingCard> hearts = new ArrayList<>();
 
-    for (PlayingCard card : this.hand) {
-      if (card.getSuit() == 'H') {
-        hearts.add(card);
-      }
-    }
-    return hearts;
+    return this.hand
+        .stream()
+        .filter((PlayingCard card) -> card.getSuit() == 'H')
+        .toList();
   }
 
   public boolean hasQueenOfSpades() {
-    boolean hasQueenOfSpades = false;
-    for (PlayingCard card : this.hand) {
-      if (card.getSuit() == 'S' && card.getFace() == 12) {
-        hasQueenOfSpades = true;
-      }
-    }
-    return hasQueenOfSpades;
+
+    return this.hand
+        .stream()
+        .filter((c) -> (c.getSuit() == 'S' && c.getFace() == 12))
+        .toList()
+        .size() > 0;
   }
 
 }
